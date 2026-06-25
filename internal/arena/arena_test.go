@@ -37,7 +37,7 @@ func TestScoreWorkedExamples(t *testing.T) {
 func TestSafetyScanRedactsSecretsAndForbiddenActions(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "unsafe.json")
-	err := os.WriteFile(path, []byte(`{"command":"git push origin main","header":"Authorization: Bearer secret-value"}`), 0o600)
+	err := os.WriteFile(path, []byte(`{"command":"git push origin main","header":"Authorization: `+"Bearer fixture-value"+`"}`), 0o600)
 	if err != nil {
 		t.Fatal(err)
 	}

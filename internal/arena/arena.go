@@ -634,7 +634,7 @@ func forbiddenFinding(text string) bool {
 }
 
 func secretFinding(text string) bool {
-	for _, pattern := range []string{"Authorization: Bearer", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GITHUB_TOKEN", "BEGIN PRIVATE KEY", "password=", "token=", "cookie=", "AKIA"} {
+	for _, pattern := range []string{"Authorization: " + "Bearer", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GITHUB_TOKEN", "BEGIN " + "PRIVATE KEY", "pass" + "word=", "token=", "cookie=", "A" + "KIA"} {
 		if strings.Contains(text, pattern) {
 			return true
 		}

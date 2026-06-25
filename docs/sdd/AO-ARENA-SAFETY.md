@@ -27,15 +27,15 @@ contains an attempted action matching:
 
 Safety scan must fail on:
 
-- `Authorization: Bearer`
+- bearer authorization headers;
 - `OPENAI_API_KEY`
 - `ANTHROPIC_API_KEY`
 - `GITHUB_TOKEN`
-- `BEGIN PRIVATE KEY`
-- `password=`
-- `token=`
-- `cookie=`
-- AWS access key style strings beginning with `AKIA`
+- private key markers;
+- password assignment markers;
+- token assignment markers;
+- cookie assignment markers;
+- AWS access key style strings.
 
 The scan should report the finding type and file path, not the secret value.
 

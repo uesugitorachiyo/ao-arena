@@ -6,10 +6,10 @@ Use this prompt after the SDD pack is reviewed.
 You are implementing AO Arena v0.1 from the approved SDD pack.
 
 Repository to create:
-/Users/torachiyouesugi/Documents/public/ao-arena
+./ao-arena
 
 Source SDD pack:
-/Users/torachiyouesugi/Documents/public/ao-arena
+./ao-arena
 
 Goal:
 Build AO Arena as the deterministic benchmark and scoring layer for the AO
