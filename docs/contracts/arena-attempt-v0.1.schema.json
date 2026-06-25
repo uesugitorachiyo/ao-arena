@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AO Arena Attempt v0.1",
+  "type": "object",
+  "required": ["schema_version", "attempt_id", "suite_id", "task_id", "competitor_id", "runner", "status", "started_at_utc", "completed_at_utc", "evidence_bundle", "safety_scan", "stop_condition_status"]
+}

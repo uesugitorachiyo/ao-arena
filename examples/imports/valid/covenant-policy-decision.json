@@ -1,0 +1,6 @@
+{
+  "schema_version": "ao.covenant.policy-decision.v0.1",
+  "source": "fixture",
+  "decision": "allow",
+  "authority": "evidence-input-only"
+}

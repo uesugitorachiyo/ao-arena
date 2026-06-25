@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AO Arena Benchmark Task v0.1",
+  "type": "object",
+  "required": ["schema_version", "task_id", "category", "title", "bare_codex_prompt", "ao_orchestration_prompt", "expected_evidence", "stop_condition", "failure_modes"]
+}

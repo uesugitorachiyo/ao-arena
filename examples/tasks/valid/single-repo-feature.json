@@ -1,0 +1,11 @@
+{
+  "schema_version": "ao.arena.benchmark-task.v0.1",
+  "task_id": "single-repo-feature-cli-health",
+  "category": "single_repo_feature",
+  "title": "Add CLI health command",
+  "bare_codex_prompt": "Add a CLI command that prints repo health.",
+  "ao_orchestration_prompt": "Use AO orchestration to plan, gate, implement, test, and produce evidence for a repo health command.",
+  "expected_evidence": ["tests", "changed_files", "command_log", "operator_handoff"],
+  "stop_condition": "command works, tests pass, evidence validates",
+  "failure_modes": ["no tests", "unclear summary", "unsafe mutation"]
+}

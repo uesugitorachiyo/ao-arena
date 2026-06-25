@@ -1,0 +1,11 @@
+{
+  "schema_version": "ao.arena.competitor.v0.1",
+  "competitor_id": "future-live-provider",
+  "runner": "live",
+  "trust_boundary": {
+    "mutates_sibling_repos": false,
+    "requires_live_provider": true,
+    "stores_credentials": false
+  },
+  "description": "Invalid v0.1 profile because live mode lacks explicit operator opt-in."
+}

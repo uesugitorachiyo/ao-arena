@@ -1,0 +1,14 @@
+{
+  "schema_version": "ao.arena.attempt.v0.1",
+  "attempt_id": "attempt-fixture-valid",
+  "suite_id": "ao-arena-v0.1",
+  "task_id": "production-readiness-hardening",
+  "competitor_id": "ao-orchestration",
+  "runner": "fixture",
+  "status": "completed",
+  "started_at_utc": "2026-01-01T00:00:00Z",
+  "completed_at_utc": "2026-01-01T00:00:01Z",
+  "evidence_bundle": "evidence-bundle.json",
+  "safety_scan": "passed",
+  "stop_condition_status": "satisfied"
+}

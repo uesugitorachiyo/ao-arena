@@ -1,0 +1,11 @@
+{
+  "schema_version": "ao.arena.competitor.v0.1",
+  "competitor_id": "bare-codex",
+  "runner": "fixture",
+  "trust_boundary": {
+    "mutates_sibling_repos": false,
+    "requires_live_provider": false,
+    "stores_credentials": false
+  },
+  "description": "Bare stock Codex prompt baseline represented by deterministic fixture evidence."
+}

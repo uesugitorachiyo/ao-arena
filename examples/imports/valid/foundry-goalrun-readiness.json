@@ -1,0 +1,7 @@
+{
+  "schema_version": "ao.foundry.goalrun-readiness.v0.1",
+  "source": "fixture",
+  "status": "ready",
+  "score": 100,
+  "authority": "evidence-input-only"
+}

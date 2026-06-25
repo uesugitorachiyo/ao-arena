@@ -1,0 +1,19 @@
+{
+  "schema_version": "ao.arena.scorecard.v0.1",
+  "competitor_id": "ao-orchestration",
+  "task_id": "production-readiness-hardening",
+  "category_scores": {
+    "correctness": 30,
+    "test_quality": 20,
+    "evidence_quality": 20,
+    "decomposition_quality": 15,
+    "safety_policy": 20,
+    "resumability": 10,
+    "stop_condition_accuracy": 10,
+    "operator_handoff": 5
+  },
+  "penalties": [],
+  "score": 130,
+  "safety_status": "passed",
+  "derivation": "Invalid scorecard with category sum above 100."
+}

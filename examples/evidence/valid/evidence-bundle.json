@@ -1,0 +1,13 @@
+{
+  "schema_version": "ao.arena.evidence-bundle.v0.1",
+  "bundle_id": "bundle-fixture-valid",
+  "prompt_digest": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "runner": "fixture",
+  "artifact_inventory": ["attempt.json", "evidence-bundle.json", "scorecard.json"],
+  "command_log_summaries": ["go test completed in fixture mode"],
+  "test_result_summaries": ["acceptance verifier passed"],
+  "changed_file_summaries": ["bounded AO Arena fixture-mode implementation"],
+  "safety_scan_result": "passed",
+  "operator_handoff_summary": "Evidence is public-safe and reproducible from fixture JSON.",
+  "stop_condition_status": "satisfied"
+}

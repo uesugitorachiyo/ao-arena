@@ -1,0 +1,15 @@
+{
+  "schema_version": "ao.arena.comparison-report.v0.1",
+  "suite_id": "ao-arena-v0.1",
+  "challengers": [
+    {
+      "competitor_id": "ao-orchestration",
+      "aggregate_score": 95
+    }
+  ],
+  "winner": "ao-orchestration",
+  "result": "invalid",
+  "safety_status": "passed",
+  "operator_summary": "Invalid report because no baseline competitor is present.",
+  "generated_at_utc": "2026-01-01T00:00:00Z"
+}

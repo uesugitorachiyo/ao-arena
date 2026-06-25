@@ -1,0 +1,11 @@
+{
+  "schema_version": "ao.arena.competitor.v0.1",
+  "competitor_id": "ao-orchestration",
+  "runner": "fixture",
+  "trust_boundary": {
+    "mutates_sibling_repos": false,
+    "requires_live_provider": false,
+    "stores_credentials": false
+  },
+  "description": "AO Foundry, Forge, AO2, and Covenant style orchestration represented by deterministic fixture evidence."
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": "ao.arena.promotion-gate.v0.1",
+  "suite_id": "ao-arena-v0.1",
+  "status": "failed",
+  "reasons": ["safety status failed"],
+  "winner": "ao-orchestration"
+}

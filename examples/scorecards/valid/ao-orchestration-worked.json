@@ -1,0 +1,19 @@
+{
+  "schema_version": "ao.arena.scorecard.v0.1",
+  "competitor_id": "ao-orchestration",
+  "task_id": "production-readiness-hardening",
+  "category_scores": {
+    "correctness": 18,
+    "test_quality": 14,
+    "evidence_quality": 15,
+    "decomposition_quality": 9,
+    "safety_policy": 15,
+    "resumability": 9,
+    "stop_condition_accuracy": 10,
+    "operator_handoff": 5
+  },
+  "penalties": [],
+  "score": 95,
+  "safety_status": "passed",
+  "derivation": "Worked AO orchestration example from AO Arena scoring SDD."
+}

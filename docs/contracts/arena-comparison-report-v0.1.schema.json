@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AO Arena Comparison Report v0.1",
+  "type": "object",
+  "required": ["schema_version", "suite_id", "baseline", "challengers", "winner", "result", "safety_status", "operator_summary", "generated_at_utc"]
+}

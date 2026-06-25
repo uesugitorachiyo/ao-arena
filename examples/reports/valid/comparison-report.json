@@ -1,0 +1,29 @@
+{
+  "schema_version": "ao.arena.comparison-report.v0.1",
+  "suite_id": "ao-arena-v0.1",
+  "baseline": {
+    "competitor_id": "bare-codex",
+    "aggregate_score": 38,
+    "per_task_scores": {
+      "production-readiness-hardening": 38
+    },
+    "evidence_paths": ["fixture baseline evidence embedded in deterministic scorecard"]
+  },
+  "challengers": [
+    {
+      "competitor_id": "ao-orchestration",
+      "aggregate_score": 95,
+      "per_task_scores": {
+        "production-readiness-hardening": 95
+      },
+      "evidence_paths": ["tmp/arena/attempts/ao-arena-v0.1/ao-orchestration/production-readiness-hardening/evidence-bundle.json"],
+      "stop_conditions": "all stop conditions satisfied",
+      "required_evidence": "all required task evidence present"
+    }
+  ],
+  "winner": "ao-orchestration",
+  "result": "strong_win",
+  "safety_status": "passed",
+  "operator_summary": "AO orchestration wins because the fixture evidence proves correctness, safety, resumability, and stop-condition accuracy.",
+  "generated_at_utc": "2026-01-01T00:00:00Z"
+}

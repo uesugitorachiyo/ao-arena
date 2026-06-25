@@ -1,0 +1,19 @@
+{
+  "schema_version": "ao.arena.scorecard.v0.1",
+  "competitor_id": "bare-codex",
+  "task_id": "production-readiness-hardening",
+  "category_scores": {
+    "correctness": 14,
+    "test_quality": 8,
+    "evidence_quality": 5,
+    "decomposition_quality": 5,
+    "safety_policy": 12,
+    "resumability": 2,
+    "stop_condition_accuracy": 4,
+    "operator_handoff": 3
+  },
+  "penalties": [{"reason": "missing required evidence", "points": 15}],
+  "score": 38,
+  "safety_status": "passed",
+  "derivation": "Worked bare Codex example from AO Arena scoring SDD."
+}

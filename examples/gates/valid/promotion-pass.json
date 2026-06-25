@@ -1,0 +1,7 @@
+{
+  "schema_version": "ao.arena.promotion-gate.v0.1",
+  "suite_id": "ao-arena-v0.1",
+  "status": "passed",
+  "reasons": [],
+  "winner": "ao-orchestration"
+}

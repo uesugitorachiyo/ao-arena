@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AO Arena Evidence Bundle v0.1",
+  "type": "object",
+  "required": ["schema_version", "bundle_id", "prompt_digest", "runner", "artifact_inventory", "command_log_summaries", "test_result_summaries", "changed_file_summaries", "safety_scan_result", "operator_handoff_summary", "stop_condition_status"]
+}

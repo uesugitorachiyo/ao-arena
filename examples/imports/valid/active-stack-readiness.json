@@ -1,0 +1,6 @@
+{
+  "schema_version": "ao.foundry.active-stack-readiness.v0.1",
+  "source": "fixture",
+  "status": "ready",
+  "authority": "evidence-input-only"
+}

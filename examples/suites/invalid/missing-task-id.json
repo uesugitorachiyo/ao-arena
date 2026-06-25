@@ -1,0 +1,19 @@
+{
+  "schema_version": "ao.arena.benchmark-suite.v0.1",
+  "suite_id": "ao-arena-v0.1",
+  "title": "AO Arena v0.1 Benchmark Suite",
+  "mode": "fixture",
+  "tasks": [
+    "single-repo-feature-cli-health",
+    "missing-task-id",
+    "multi-file-refactor-cli-boundary",
+    "multi-file-refactor-evidence-model",
+    "bug-fix-regression-stop-condition",
+    "production-readiness-hardening",
+    "cross-repo-orchestration-readiness",
+    "overnight-autonomous-advancement"
+  ],
+  "competitors": ["bare-codex", "ao-orchestration"],
+  "safety_profile": "public-safe-fixture",
+  "scorecard": "arena-default-v0.1"
+}
