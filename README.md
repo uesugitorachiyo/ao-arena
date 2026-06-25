@@ -62,3 +62,7 @@ Implementation follows the SDD slices in order and keeps every durable artifact
 public-safe. Live provider mode remains blocked unless a future profile,
 operator opt-in, command flag, scratch output path, and pre/post safety scans all
 authorize it.
+
+## License
+
+AO Arena is licensed under `Apache-2.0`. See `LICENSE`.
