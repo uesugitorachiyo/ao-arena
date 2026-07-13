@@ -10,6 +10,43 @@ Fixture mode is the only default v0.1 execution path. AO Arena does not run
 live providers, mutate sibling repositories, push, tag, release, upload, deploy,
 or store credentials.
 
+## Role
+
+AO Arena owns deterministic benchmark and paired-run evaluation evidence. It
+does not own approvals, policy, execution, or activation.
+
+## Maturity
+
+**Prototype.** The fixture CLI is `implemented` and `executable-tested`.
+Current scoring is `fixture-only`. The external-beta workflow is
+`clean-room-rehearsed`. External beta has not launched.
+
+## Install
+
+```sh
+go build -o bin/arena ./cmd/arena
+```
+
+## Quickstart
+
+```sh
+bin/arena --help
+```
+
+## Safety
+
+No promotion is requested. Fixture mode is the default and only supported beta-preflight path. Arena
+cannot approve execution or activation, and it does not prove unrestricted
+RSI. Unrestricted RSI remains denied.
+
+## External Beta
+
+Canonical topology and status live in
+[AO Architecture](https://github.com/uesugitorachiyo/ao-architecture).
+See the
+[AO Arena component page](https://github.com/uesugitorachiyo/ao-architecture/blob/main/components/ao-arena.md)
+for the external-beta boundary.
+
 ## Run
 
 ```sh
