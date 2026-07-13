@@ -1,14 +1,20 @@
 # AO Arena
 
-AO Arena is the deterministic benchmark and scoring layer for recursive system
-improvement in the AO orchestration framework. The v0.1 product is a local-first
-Go CLI that compares bare Codex prompts against AO orchestration prompts using
-fixture-mode evidence, deterministic scoring, comparison reports, public-safety
-scans, and promotion gates.
+AO Arena is AO's deterministic benchmark and comparative-evaluation tool. It validates benchmark suites and competitors, scores recorded attempts, compares results, and renders reports. Use it when two execution approaches need to be measured against the same tasks and scoring rules. Its current command path evaluates supplied evidence rather than launching providers.
 
-Fixture mode is the only default v0.1 execution path. AO Arena does not run
-live providers, mutate sibling repositories, push, tag, release, upload, deploy,
-or store credentials.
+## How it fits in AO
+
+- **Primary responsibility:** Benchmarking and comparative evaluation.
+- **Inputs:** Benchmark suites, competitor definitions, attempts, and evidence bundles.
+- **Outputs:** Scorecards, comparison reports, and evaluation results.
+- **Upstream:** AO2 runs or other recorded attempts.
+- **Downstream:** AO Sentinel and AO Promoter.
+
+See the
+[AO Architecture guide](https://github.com/uesugitorachiyo/ao-architecture)
+and the
+[AO Arena component page](https://github.com/uesugitorachiyo/ao-architecture/blob/main/components/ao-arena.md)
+for the cross-repository flow.
 
 ## Run
 
@@ -45,23 +51,6 @@ git diff --check
 | `docs/sdd/AO-ARENA-IMPLEMENTATION-SLICES.md` | Junior-engineer-ready implementation slices. |
 | `docs/sdd/AO-ARENA-ACCEPTANCE-GATES.md` | 100/100 plan and product readiness gates. |
 | `docs/sdd/AO-ARENA-SDD-HANDOFF.md` | Handoff prompt for AO Foundry or AO Forge. |
-
-## Planner Artifacts
-
-The validated AO2 SDD plan lives at:
-
-- `target/ao-arena-plan.json`
-
-The planner prompt used to derive this pack lives at:
-
-- `docs/sdd/AO-ARENA-SDD-PLANNER-PROMPT.md`
-
-## Implementation Rule
-
-Implementation follows the SDD slices in order and keeps every durable artifact
-public-safe. Live provider mode remains blocked unless a future profile,
-operator opt-in, command flag, scratch output path, and pre/post safety scans all
-authorize it.
 
 ## License
 
