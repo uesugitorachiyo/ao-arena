@@ -165,6 +165,56 @@ func TestImportHelpersTreatSourcesAsEvidenceOnlyAndFailClosed(t *testing.T) {
 	}
 }
 
+func TestGitHubIssueMonth2ReproductionEvaluationMeetsTruthSetThresholds(t *testing.T) {
+	root := repoRoot(t)
+	body, err := os.ReadFile(filepath.Join(root, "examples", "reports", "valid", "github-issue-month2-reproduction-evaluation.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var report map[string]any
+	if err := json.Unmarshal(body, &report); err != nil {
+		t.Fatal(err)
+	}
+	if report["schema_version"] != "ao.arena.github-issue-reproduction-evaluation.v0.1" ||
+		report["status"] != "passed" {
+		t.Fatalf("unexpected reproduction evaluation identity: %#v", report)
+	}
+	thresholds := report["thresholds"].(map[string]any)
+	metrics := report["metrics"].(map[string]any)
+	if metrics["precision"].(float64) < thresholds["precision_minimum"].(float64) ||
+		metrics["recall"].(float64) < thresholds["recall_minimum"].(float64) {
+		t.Fatalf("reproduction metrics missed thresholds: thresholds=%#v metrics=%#v", thresholds, metrics)
+	}
+	if metrics["truth_set_size"].(float64) != 13 ||
+		metrics["authentic_bug_fixtures"].(float64) != 2 ||
+		metrics["non_bug_fixtures"].(float64) != 11 {
+		t.Fatalf("truth-set metrics drifted: %#v", metrics)
+	}
+	flaky := report["flaky_reproduction"].(map[string]any)
+	if flaky["runs"].(float64) < 10 ||
+		flaky["confidence"].(float64) < thresholds["flaky_confidence_minimum"].(float64) ||
+		flaky["uncertainty_promoted_to_authentic_without_measurement"] != false {
+		t.Fatalf("flaky reproduction confidence is not measured: %#v", flaky)
+	}
+	for _, key := range []string{
+		"negative_controls_passed",
+	} {
+		if report[key] != true {
+			t.Fatalf("%s = %#v, want true", key, report[key])
+		}
+	}
+	for _, key := range []string{
+		"security_sensitive_public_repair_entered",
+		"provider_call_performed",
+		"promotion_requested",
+		"release_selected",
+	} {
+		if report[key] != false {
+			t.Fatalf("%s = %#v, want false", key, report[key])
+		}
+	}
+}
+
 func repoRoot(t *testing.T) string {
 	t.Helper()
 	root, err := filepath.Abs(filepath.Join("..", ".."))

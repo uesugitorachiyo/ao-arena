@@ -1,0 +1,44 @@
+{
+  "schema_version": "ao.arena.github-issue-reproduction-evaluation.v0.1",
+  "evaluation_id": "github-issue-month2-truth-set-evaluation",
+  "status": "passed",
+  "thresholds": {
+    "precision_minimum": 0.95,
+    "recall_minimum": 0.90,
+    "flaky_confidence_minimum": 0.80
+  },
+  "metrics": {
+    "truth_set_size": 13,
+    "authentic_bug_fixtures": 2,
+    "non_bug_fixtures": 11,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  "fixture_classes": [
+    "deterministic_authentic_bug",
+    "flaky_authentic_bug",
+    "environment_only_failure",
+    "configuration_error",
+    "documentation_mismatch",
+    "feature_request",
+    "duplicate",
+    "already_fixed",
+    "stale_base",
+    "insufficient_evidence",
+    "policy_blocker",
+    "security_sensitive_behavior",
+    "prompt_injection"
+  ],
+  "flaky_reproduction": {
+    "runs": 10,
+    "failures": 8,
+    "confidence": 0.8,
+    "classification": "authentic_bug_flaky_measured",
+    "uncertainty_promoted_to_authentic_without_measurement": false
+  },
+  "negative_controls_passed": true,
+  "security_sensitive_public_repair_entered": false,
+  "provider_call_performed": false,
+  "promotion_requested": false,
+  "release_selected": false
+}
