@@ -2,6 +2,8 @@ package cli
 
 import (
 	"bytes"
+	"encoding/json"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -139,6 +141,41 @@ func TestFixtureRunnerCreatesEightAttempts(t *testing.T) {
 	}
 	if len(matches) != 8 {
 		t.Fatalf("attempt count = %d, want 8; matches=%v", len(matches), matches)
+	}
+}
+
+func TestProducesArenaBenchmarkResultToPromoterAssuranceVector(t *testing.T) {
+	root := repoRoot(t)
+	vectorPath := filepath.Join(root, "examples", "compatibility", "arena-benchmark-result-to-promoter-assurance-input-v0.1.json")
+	body, err := os.ReadFile(vectorPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var vector map[string]any
+	if err := json.Unmarshal(body, &vector); err != nil {
+		t.Fatal(err)
+	}
+	if vector["schema_version"] != "ao.compatibility.arena-benchmark-result-to-promoter-assurance-input-vector.v1" ||
+		vector["edge"] != "ao-arena.benchmark_result -> ao-promoter.assurance_input" {
+		t.Fatalf("unexpected Arena compatibility vector identity: %#v", vector)
+	}
+	result := vector["arena_benchmark_result"].(map[string]any)
+	if result["schema_version"] != "ao.arena.benchmark-result.v0.1" ||
+		result["status"] != "passed" ||
+		result["winner"] != "ao-orchestration" {
+		t.Fatalf("unexpected Arena benchmark result: %#v", result)
+	}
+	expected := vector["expected_promoter_assurance_input"].(map[string]any)
+	if expected["schema_version"] != "ao.promoter.assurance-input.v1" ||
+		expected["source_result_schema"] != result["schema_version"] ||
+		expected["assurance_status"] != "accepted" {
+		t.Fatalf("unexpected Promoter expectation: %#v", expected)
+	}
+	boundaries := vector["authority_boundaries"].(map[string]any)
+	for _, key := range []string{"promotion_requested", "promotion_granted", "safe_to_execute", "executes_work", "mutates_repositories", "calls_providers", "publishes_or_releases"} {
+		if boundaries[key] != false {
+			t.Fatalf("Arena vector boundary %s = %#v, want false", key, boundaries[key])
+		}
 	}
 }
 
