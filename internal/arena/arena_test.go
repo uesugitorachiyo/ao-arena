@@ -215,6 +215,46 @@ func TestGitHubIssueMonth2ReproductionEvaluationMeetsTruthSetThresholds(t *testi
 	}
 }
 
+func TestGitHubIssueMonth3RepairCandidateEvaluationRejectsFalseFixes(t *testing.T) {
+	root := repoRoot(t)
+	body, err := os.ReadFile(filepath.Join(root, "examples", "reports", "valid", "github-issue-month3-repair-candidate-evaluation.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var report map[string]any
+	if err := json.Unmarshal(body, &report); err != nil {
+		t.Fatal(err)
+	}
+	if report["schema_version"] != "ao.arena.github-issue-repair-candidate-evaluation.v0.1" ||
+		report["status"] != "passed" ||
+		report["accepted_candidate"] != "candidate_minimal_fixture_patch" {
+		t.Fatalf("unexpected repair candidate evaluation identity: %#v", report)
+	}
+	metrics := report["accepted_candidate_metrics"].(map[string]any)
+	for _, key := range []string{"pre_patch_failure_preserved", "post_patch_regression_passed", "negative_control_passed", "rollback_verified", "replay_digest_match"} {
+		if metrics[key] != true {
+			t.Fatalf("accepted candidate metric %s = %#v, want true", key, metrics[key])
+		}
+	}
+	if metrics["unrelated_files_changed"].(float64) != 0 {
+		t.Fatalf("accepted candidate changed unrelated files: %#v", metrics)
+	}
+	rejected := report["rejected_candidates"].([]any)
+	if len(rejected) != 2 {
+		t.Fatalf("expected two rejected false-fix candidates: %#v", rejected)
+	}
+	for _, key := range []string{"test_deleted_or_weakened_rejected", "lint_or_policy_disabled_rejected", "unrelated_file_change_rejected", "security_sensitive_public_repair_rejected", "provider_execution_required_rejected"} {
+		if report["false_fix_rejection"].(map[string]any)[key] != true {
+			t.Fatalf("missing false-fix rejection %s: %#v", key, report["false_fix_rejection"])
+		}
+	}
+	for _, key := range []string{"feature_generated_draft_pr_opened", "issue_write_performed", "release_selected", "rsi_authorized"} {
+		if report["denied_actions"].(map[string]any)[key] != false {
+			t.Fatalf("denied action %s must remain false: %#v", key, report["denied_actions"])
+		}
+	}
+}
+
 func repoRoot(t *testing.T) string {
 	t.Helper()
 	root, err := filepath.Abs(filepath.Join("..", ".."))
