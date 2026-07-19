@@ -552,6 +552,33 @@ func WriteSafetyScan(path string, out string) (SafetyReport, error) {
 	return report, nil
 }
 
+const (
+	maxSafetyScanFiles      = 4096
+	maxSafetyScanFileBytes  = 1 * 1024 * 1024
+	maxSafetyScanTotalBytes = 8 * 1024 * 1024
+)
+
+type safetyScanBudget struct {
+	files      int
+	totalBytes int64
+}
+
+func (budget *safetyScanBudget) accept(path string, info fs.FileInfo) error {
+	size := info.Size()
+	if size > maxSafetyScanFileBytes {
+		return fmt.Errorf("safety scan file size limit exceeded for %s", filepath.ToSlash(path))
+	}
+	budget.files++
+	if budget.files > maxSafetyScanFiles {
+		return fmt.Errorf("safety scan file count limit exceeded")
+	}
+	budget.totalBytes += size
+	if budget.totalBytes > maxSafetyScanTotalBytes {
+		return fmt.Errorf("safety scan total byte limit exceeded")
+	}
+	return nil
+}
+
 func ScanPath(path string) (SafetyReport, error) {
 	report := SafetyReport{
 		SchemaVersion:  "ao.arena.safety-scan.v0.1",
@@ -561,11 +588,18 @@ func ScanPath(path string) (SafetyReport, error) {
 		BlockedActions: forbiddenActions(),
 	}
 	root := filepath.Clean(path)
-	info, err := os.Stat(root)
+	info, err := os.Lstat(root)
 	if err != nil {
 		return report, err
 	}
-	checkFile := func(filePath string) error {
+	if info.Mode()&fs.ModeSymlink != 0 {
+		return report, fmt.Errorf("safety scan symlink is not allowed: %s", filepath.ToSlash(root))
+	}
+	budget := safetyScanBudget{}
+	checkFile := func(filePath string, info fs.FileInfo) error {
+		if err := budget.accept(filePath, info); err != nil {
+			return err
+		}
 		data, err := os.ReadFile(filePath)
 		if err != nil {
 			return err
@@ -588,13 +622,16 @@ func ScanPath(path string) (SafetyReport, error) {
 		return nil
 	}
 	if !info.IsDir() {
-		if err := checkFile(root); err != nil {
+		if err := checkFile(root, info); err != nil {
 			return report, err
 		}
 	} else {
 		err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
+			}
+			if d.Type()&fs.ModeSymlink != 0 {
+				return fmt.Errorf("safety scan symlink is not allowed: %s", filepath.ToSlash(path))
 			}
 			if d.IsDir() && d.Name() == "invalid" && scanningExamples(root) {
 				return filepath.SkipDir
@@ -605,7 +642,11 @@ func ScanPath(path string) (SafetyReport, error) {
 			if !safeSuffix(path) {
 				return nil
 			}
-			return checkFile(path)
+			info, err := d.Info()
+			if err != nil {
+				return err
+			}
+			return checkFile(path, info)
 		})
 		if err != nil {
 			return report, err

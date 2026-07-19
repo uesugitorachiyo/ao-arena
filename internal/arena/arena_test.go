@@ -2,8 +2,10 @@ package arena
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -58,6 +60,72 @@ func TestSafetyScanRedactsSecretsAndForbiddenActions(t *testing.T) {
 	}
 	if strings.Contains(string(raw), "secret-value") {
 		t.Fatalf("safety report leaked secret value: %s", raw)
+	}
+}
+
+func TestSafetyScanRejectsSymlinkedSafeSuffixFile(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("symlink creation is privilege-dependent on Windows")
+	}
+	dir := t.TempDir()
+	outsidePath := filepath.Join(t.TempDir(), "outside.json")
+	if err := os.WriteFile(outsidePath, []byte(`{"safe":true}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(outsidePath, filepath.Join(dir, "linked.json")); err != nil {
+		t.Fatalf("create symlink: %v", err)
+	}
+
+	_, err := ScanPath(dir)
+
+	if err == nil || !strings.Contains(err.Error(), "symlink") {
+		t.Fatalf("ScanPath symlink error = %v, want symlink diagnostic", err)
+	}
+}
+
+func TestSafetyScanRejectsFileCountLimit(t *testing.T) {
+	dir := t.TempDir()
+	for i := 0; i <= maxSafetyScanFiles; i++ {
+		path := filepath.Join(dir, fmt.Sprintf("safe-%05d.txt", i))
+		if err := os.WriteFile(path, []byte("safe\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	_, err := ScanPath(dir)
+
+	if err == nil || !strings.Contains(err.Error(), "file count limit") {
+		t.Fatalf("ScanPath file-count error = %v, want file-count diagnostic", err)
+	}
+}
+
+func TestSafetyScanRejectsOversizedSafeSuffixFile(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "oversized.txt")
+	if err := os.WriteFile(path, []byte(strings.Repeat("A", maxSafetyScanFileBytes+1)), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := ScanPath(dir)
+
+	if err == nil || !strings.Contains(err.Error(), "file size limit") {
+		t.Fatalf("ScanPath oversized-file error = %v, want file-size diagnostic", err)
+	}
+}
+
+func TestSafetyScanRejectsTotalByteLimit(t *testing.T) {
+	dir := t.TempDir()
+	for i := 0; i <= maxSafetyScanTotalBytes/maxSafetyScanFileBytes; i++ {
+		path := filepath.Join(dir, fmt.Sprintf("safe-total-%05d.txt", i))
+		if err := os.WriteFile(path, []byte(strings.Repeat("A", maxSafetyScanFileBytes)), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	_, err := ScanPath(dir)
+
+	if err == nil || !strings.Contains(err.Error(), "total byte limit") {
+		t.Fatalf("ScanPath total-byte error = %v, want total-byte diagnostic", err)
 	}
 }
 
