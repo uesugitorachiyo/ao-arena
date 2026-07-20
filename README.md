@@ -32,11 +32,25 @@ PATH="$PWD/tmp/bin:$PATH" arena suite validate --suite examples/suites/valid/ao-
 PATH="$PWD/tmp/bin:$PATH" arena competitor validate --competitor examples/competitors/valid/bare-codex.json
 PATH="$PWD/tmp/bin:$PATH" arena competitor validate --competitor examples/competitors/valid/ao-orchestration.json
 PATH="$PWD/tmp/bin:$PATH" arena compare --suite examples/suites/valid/ao-arena-v0.1.json --fixture-mode --out tmp/arena-report.json
+PATH="$PWD/tmp/bin:$PATH" arena compare real-attempts --input examples/real-attempts/valid/month5-ten-pair-manifest.json --out tmp/real-attempt-comparison.json
 PATH="$PWD/tmp/bin:$PATH" arena report render --report tmp/arena-report.json --out tmp/arena-report.md
 PATH="$PWD/tmp/bin:$PATH" arena gate promotion --report tmp/arena-report.json --out tmp/arena-promotion-gate.json
 PATH="$PWD/tmp/bin:$PATH" arena safety scan --path examples --out tmp/arena-safety-scan.json
 git diff --check
 ```
+
+`compare real-attempts` evaluates exactly ten matched `bare-codex` and
+`ao-orchestration` attempts without calling providers. The input manifest and
+its digest-bound task portfolio and relative evidence files must be regular
+non-link, bounded, strict JSON. The portfolio authoritatively fixes each task's
+snapshot, expected terminal, verifier command, and authority boundary.
+Evidence binds verifier outcomes and the complete scored source result by
+digest and exact manifest equality; this verifies supplied-file consistency,
+not independent semantic truth. The report retains honest failed and blocked
+attempts while applying the documented eligibility rules.
+The output parent must already exist, and the command refuses symlinks,
+overwrites, and input/output identity. It writes only the explicit `--out`
+file, with no timestamp, evidence path, or local absolute path in the report.
 
 ## SDD Files
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"strings"
 
 	"github.com/ao-foundry/ao-arena/internal/arena"
 )
@@ -46,7 +47,7 @@ func Run(args []string, stdout io.Writer, stderr io.Writer) int {
 }
 
 func printHelp(out io.Writer) {
-	fmt.Fprintln(out, `AO Arena fixture-mode benchmark CLI
+	fmt.Fprintln(out, `AO Arena benchmark CLI
 
 Commands:
   suite validate --suite <path>
@@ -55,6 +56,7 @@ Commands:
   evidence validate --bundle <path>
   score --attempt <path> --scorecard <path> --out <path>
   compare --suite <path> --fixture-mode --out <path>
+  compare real-attempts --input <manifest.json> --out <comparison.json>
   report render --report <json> --out <markdown>
   gate promotion --report <json> --out <json>
   safety scan --path <path> --out <json>`)
@@ -139,6 +141,9 @@ func runScore(args []string, stdout io.Writer) error {
 }
 
 func runCompare(args []string, stdout io.Writer) error {
+	if len(args) > 0 && args[0] == "real-attempts" {
+		return runCompareRealAttempts(args[1:], stdout)
+	}
 	suite := flagValue(args, "--suite")
 	out := flagValue(args, "--out")
 	if suite == "" || out == "" {
@@ -153,6 +158,50 @@ func runCompare(args []string, stdout io.Writer) error {
 	}
 	fmt.Fprintf(stdout, "comparison report written: %s winner=%s\n", filepath.Clean(out), report.Winner)
 	return nil
+}
+
+func runCompareRealAttempts(args []string, stdout io.Writer) error {
+	input, out, err := realAttemptComparePaths(args)
+	if err != nil {
+		return err
+	}
+	report, err := arena.CompareRealAttempts(input, out)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(stdout, "real-attempt comparison written: pairs=%d winner=%s result=%s\n", report.PairCount, report.Winner, report.Result)
+	return nil
+}
+
+func realAttemptComparePaths(args []string) (string, string, error) {
+	var input, out string
+	for i := 0; i < len(args); {
+		name := args[i]
+		if name != "--input" && name != "--out" {
+			return "", "", fmt.Errorf("unknown flag or argument %q", name)
+		}
+		if i+1 >= len(args) || strings.HasPrefix(args[i+1], "--") {
+			return "", "", fmt.Errorf("usage: arena compare real-attempts --input <manifest.json> --out <comparison.json>")
+		}
+		value := args[i+1]
+		switch name {
+		case "--input":
+			if input != "" {
+				return "", "", fmt.Errorf("duplicate --input")
+			}
+			input = value
+		case "--out":
+			if out != "" {
+				return "", "", fmt.Errorf("duplicate --out")
+			}
+			out = value
+		}
+		i += 2
+	}
+	if input == "" || out == "" {
+		return "", "", fmt.Errorf("usage: arena compare real-attempts --input <manifest.json> --out <comparison.json>")
+	}
+	return input, out, nil
 }
 
 func runReport(args []string, stdout io.Writer) error {

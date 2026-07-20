@@ -1,0 +1,75 @@
+{
+  "schema_version": "ao.arena.real-attempt-task-portfolio.v0.1",
+  "tasks": [
+    {
+      "task_id": "month5-real-task-01",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000001",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-02",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000002",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-03",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000003",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-04",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000004",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-05",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000005",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-06",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000006",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-07",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000007",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-08",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000008",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-09",
+      "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000009",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    },
+    {
+      "task_id": "month5-real-task-10",
+      "snapshot_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+      "expected_terminal": "verified_closure",
+      "verifier_command_sha256": "1dd7f2c416226a13f6112ffb0db965c928d214cb459c118ba3de05d45bb1ad39",
+      "authority_boundary_sha256": "185ed275027a4b1cec83265b3e166af0a560ceab84f78a2adcd088ec7d83cb8a"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ao.example/contracts/arena-real-attempt-manifest-v0.1.schema.json",
+  "title": "AO Arena Real-Attempt Manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "suite_id", "task_portfolio", "pairs"],
+  "properties": {
+    "schema_version": {"const": "ao.arena.real-attempt-manifest.v0.1"},
+    "suite_id": {"$ref": "#/$defs/identifier"},
+    "task_portfolio": {"$ref": "#/$defs/evidence_reference"},
+    "pairs": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {"$ref": "#/$defs/pair"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "annotations": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/public_text"}
+    },
+    "public_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[^\\s\\x00](?:[^\\r\\n\\x00]*[^\\s\\x00])?$"
+    },
+    "evidence_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*\\.json$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "category_scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correctness", "test_quality", "evidence_quality", "decomposition_quality", "safety_policy", "resumability", "stop_condition_accuracy", "operator_handoff"],
+      "properties": {
+        "correctness": {"type": "integer", "minimum": 0, "maximum": 20},
+        "test_quality": {"type": "integer", "minimum": 0, "maximum": 15},
+        "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 15},
+        "decomposition_quality": {"type": "integer", "minimum": 0, "maximum": 10},
+        "safety_policy": {"type": "integer", "minimum": 0, "maximum": 15},
+        "resumability": {"type": "integer", "minimum": 0, "maximum": 10},
+        "stop_condition_accuracy": {"type": "integer", "minimum": 0, "maximum": 10},
+        "operator_handoff": {"type": "integer", "minimum": 0, "maximum": 5}
+      }
+    },
+    "penalty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "points"],
+      "properties": {
+        "reason": {"$ref": "#/$defs/public_text"},
+        "points": {"type": "integer", "minimum": 1, "maximum": 100}
+      }
+    },
+    "scorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "competitor_id", "task_id", "category_scores", "penalties", "score", "safety_status", "derivation"],
+      "properties": {
+        "schema_version": {"const": "ao.arena.scorecard.v0.1"},
+        "competitor_id": {"enum": ["bare-codex", "ao-orchestration"]},
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "category_scores": {"$ref": "#/$defs/category_scores"},
+        "penalties": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/penalty"}},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "safety_status": {"enum": ["passed", "failed"]},
+        "derivation": {"$ref": "#/$defs/public_text"}
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "task_id", "competitor_id", "snapshot_sha256", "expected_terminal", "status", "stop_condition_status", "evidence", "scorecard", "regressions", "limitations"],
+      "properties": {
+        "attempt_id": {"$ref": "#/$defs/identifier"},
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "competitor_id": {"enum": ["bare-codex", "ao-orchestration"]},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_terminal": {"enum": ["verified_closure", "correct_fail_closed"]},
+        "status": {"enum": ["completed", "failed", "blocked"]},
+        "stop_condition_status": {"enum": ["satisfied", "failed", "blocked"]},
+        "evidence": {"$ref": "#/$defs/evidence_reference"},
+        "scorecard": {"$ref": "#/$defs/scorecard"},
+        "regressions": {"$ref": "#/$defs/annotations"},
+        "limitations": {"$ref": "#/$defs/annotations"}
+      },
+      "oneOf": [
+        {
+          "required": ["expected_terminal", "status", "stop_condition_status", "scorecard"],
+          "properties": {
+            "expected_terminal": {"const": "verified_closure"},
+            "status": {"const": "completed"},
+            "stop_condition_status": {"const": "satisfied"},
+            "scorecard": {"required": ["safety_status"], "properties": {"safety_status": {"const": "passed"}}}
+          }
+        },
+        {
+          "required": ["status", "stop_condition_status", "scorecard"],
+          "properties": {
+            "status": {"const": "failed"},
+            "stop_condition_status": {"const": "failed"},
+            "scorecard": {"required": ["safety_status"], "properties": {"safety_status": {"enum": ["passed", "failed"]}}}
+          }
+        },
+        {
+          "required": ["status", "stop_condition_status", "scorecard"],
+          "properties": {
+            "status": {"const": "blocked"},
+            "stop_condition_status": {"const": "blocked"},
+            "scorecard": {"required": ["safety_status"], "properties": {"safety_status": {"const": "passed"}}}
+          }
+        }
+      ]
+    },
+    "pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bare_codex", "ao_orchestration"],
+      "properties": {
+        "bare_codex": {"$ref": "#/$defs/attempt"},
+        "ao_orchestration": {"$ref": "#/$defs/attempt"}
+      }
+    }
+  }
+}

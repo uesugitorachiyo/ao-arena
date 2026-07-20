@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ao.example/contracts/arena-real-attempt-task-portfolio-v0.1.schema.json",
+  "title": "AO Arena Real-Attempt Task Portfolio v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tasks"],
+  "properties": {
+    "schema_version": {"const": "ao.arena.real-attempt-task-portfolio.v0.1"},
+    "tasks": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {"$ref": "#/$defs/task"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "snapshot_sha256", "expected_terminal", "verifier_command_sha256", "authority_boundary_sha256"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_terminal": {"enum": ["verified_closure", "correct_fail_closed"]},
+        "verifier_command_sha256": {"$ref": "#/$defs/sha256"},
+        "authority_boundary_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
