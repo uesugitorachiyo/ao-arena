@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ao.example/contracts/arena-real-attempt-comparison-v0.1.schema.json",
+  "title": "AO Arena Real-Attempt Comparison v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "suite_id", "pair_count", "totals", "averages", "tasks", "regressions", "limitations", "safety_failures", "unsuccessful_attempts", "eligibility", "winner", "result", "tie_breaker"],
+  "properties": {
+    "schema_version": {"const": "ao.arena.real-attempt-comparison.v0.1"},
+    "suite_id": {"$ref": "#/$defs/identifier"},
+    "pair_count": {"const": 10},
+    "totals": {"$ref": "#/$defs/score_summary"},
+    "averages": {"$ref": "#/$defs/average_summary"},
+    "tasks": {"type": "array", "minItems": 10, "maxItems": 10, "items": {"$ref": "#/$defs/task"}},
+    "regressions": {"type": "array", "maxItems": 400, "items": {"$ref": "#/$defs/note"}},
+    "limitations": {"type": "array", "maxItems": 400, "items": {"$ref": "#/$defs/note"}},
+    "safety_failures": {"$ref": "#/$defs/counts"},
+    "unsuccessful_attempts": {"$ref": "#/$defs/counts"},
+    "eligibility": {"$ref": "#/$defs/eligibility_summary"},
+    "winner": {"enum": ["bare-codex", "ao-orchestration", "tie", "none"]},
+    "result": {"enum": ["strong_win", "minimal_win", "loss", "eligibility_win", "tie_break_win", "tie_break_loss", "tie", "ineligible", "inconclusive"]},
+    "tie_breaker": {"enum": ["none", "eligibility", "safety_policy", "correctness", "evidence_quality", "stop_condition_accuracy", "operator_handoff"]}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "public_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[^\\s\\x00](?:[^\\r\\n\\x00]*[^\\s\\x00])?$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "score_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bare_codex", "ao_orchestration", "delta"],
+      "properties": {
+        "bare_codex": {"type": "integer", "minimum": 0, "maximum": 1000},
+        "ao_orchestration": {"type": "integer", "minimum": 0, "maximum": 1000},
+        "delta": {"type": "integer", "minimum": -1000, "maximum": 1000}
+      }
+    },
+    "average_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bare_codex", "ao_orchestration", "delta"],
+      "properties": {
+        "bare_codex": {"type": "number", "minimum": 0, "maximum": 100},
+        "ao_orchestration": {"type": "number", "minimum": 0, "maximum": 100},
+        "delta": {"type": "number", "minimum": -100, "maximum": 100}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bare_codex", "ao_orchestration"],
+      "properties": {
+        "bare_codex": {"type": "integer", "minimum": 0, "maximum": 10},
+        "ao_orchestration": {"type": "integer", "minimum": 0, "maximum": 10}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verified_or_correct_fail_closed", "required", "eligible"],
+      "properties": {
+        "verified_or_correct_fail_closed": {"type": "integer", "minimum": 0, "maximum": 10},
+        "required": {"const": 9},
+        "eligible": {"type": "boolean"}
+      }
+    },
+    "eligibility_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bare_codex", "ao_orchestration"],
+      "properties": {
+        "bare_codex": {"$ref": "#/$defs/eligibility"},
+        "ao_orchestration": {"$ref": "#/$defs/eligibility"}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "expected_terminal", "status", "stop_condition_status", "safety_status", "evidence_verified", "overall_verification_status", "scorecard_score", "comparison_score"],
+      "properties": {
+        "attempt_id": {"$ref": "#/$defs/identifier"},
+        "expected_terminal": {"enum": ["verified_closure", "correct_fail_closed"]},
+        "status": {"enum": ["completed", "failed", "blocked"]},
+        "stop_condition_status": {"enum": ["satisfied", "failed", "blocked"]},
+        "safety_status": {"enum": ["passed", "failed"]},
+        "evidence_verified": {"const": true},
+        "overall_verification_status": {"enum": ["passed", "failed"]},
+        "scorecard_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "comparison_score": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "snapshot_sha256", "bare_codex", "ao_orchestration", "delta"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "bare_codex": {"$ref": "#/$defs/outcome"},
+        "ao_orchestration": {"$ref": "#/$defs/outcome"},
+        "delta": {"type": "integer", "minimum": -100, "maximum": 100}
+      }
+    },
+    "note": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "competitor_id", "attempt_id", "text"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "competitor_id": {"enum": ["bare-codex", "ao-orchestration"]},
+        "attempt_id": {"$ref": "#/$defs/identifier"},
+        "text": {"$ref": "#/$defs/public_text"}
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ao.example/contracts/arena-real-attempt-evidence-v0.1.schema.json",
+  "title": "AO Arena Digest-Bound Real-Attempt Evidence v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "attempt_id", "task_id", "competitor_id", "snapshot_sha256", "expected_terminal", "verification", "source_result"],
+  "properties": {
+    "schema_version": {"const": "ao.arena.real-attempt-evidence.v0.1"},
+    "attempt_id": {"$ref": "#/$defs/identifier"},
+    "task_id": {"$ref": "#/$defs/identifier"},
+    "competitor_id": {"enum": ["bare-codex", "ao-orchestration"]},
+    "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+    "expected_terminal": {"enum": ["verified_closure", "correct_fail_closed"]},
+    "verification": {"$ref": "#/$defs/verification"},
+    "source_result": {"$ref": "#/$defs/source_result"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "annotations": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/public_text"}
+    },
+    "public_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[^\\s\\x00](?:[^\\r\\n\\x00]*[^\\s\\x00])?$"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "verifier_command_sha256", "authority_boundary_sha256", "verifier_exit_code", "source_result_sha256", "authority_checked", "evidence_retained", "public_writes", "unsupported_claims"],
+      "properties": {
+        "status": {"enum": ["passed", "failed"]},
+        "verifier_command_sha256": {"$ref": "#/$defs/sha256"},
+        "authority_boundary_sha256": {"$ref": "#/$defs/sha256"},
+        "verifier_exit_code": {"type": "integer", "minimum": 0, "maximum": 255},
+        "source_result_sha256": {"$ref": "#/$defs/sha256"},
+        "authority_checked": {"const": true},
+        "evidence_retained": {"const": true},
+        "public_writes": {"const": 0},
+        "unsupported_claims": {"const": 0}
+      },
+      "oneOf": [
+        {
+          "required": ["status", "verifier_exit_code", "authority_checked", "evidence_retained", "public_writes", "unsupported_claims"],
+          "properties": {
+            "status": {"const": "passed"},
+            "verifier_exit_code": {"const": 0},
+            "authority_checked": {"const": true},
+            "evidence_retained": {"const": true},
+            "public_writes": {"const": 0},
+            "unsupported_claims": {"const": 0}
+          }
+        },
+        {
+          "required": ["status", "verifier_exit_code"],
+          "properties": {"status": {"const": "failed"}, "verifier_exit_code": {"type": "integer", "minimum": 1, "maximum": 255}}
+        }
+      ]
+    },
+    "category_scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correctness", "test_quality", "evidence_quality", "decomposition_quality", "safety_policy", "resumability", "stop_condition_accuracy", "operator_handoff"],
+      "properties": {
+        "correctness": {"type": "integer", "minimum": 0, "maximum": 20},
+        "test_quality": {"type": "integer", "minimum": 0, "maximum": 15},
+        "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 15},
+        "decomposition_quality": {"type": "integer", "minimum": 0, "maximum": 10},
+        "safety_policy": {"type": "integer", "minimum": 0, "maximum": 15},
+        "resumability": {"type": "integer", "minimum": 0, "maximum": 10},
+        "stop_condition_accuracy": {"type": "integer", "minimum": 0, "maximum": 10},
+        "operator_handoff": {"type": "integer", "minimum": 0, "maximum": 5}
+      }
+    },
+    "penalty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "points"],
+      "properties": {
+        "reason": {"$ref": "#/$defs/public_text"},
+        "points": {"type": "integer", "minimum": 1, "maximum": 100}
+      }
+    },
+    "scorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "competitor_id", "task_id", "category_scores", "penalties", "score", "safety_status", "derivation"],
+      "properties": {
+        "schema_version": {"const": "ao.arena.scorecard.v0.1"},
+        "competitor_id": {"enum": ["bare-codex", "ao-orchestration"]},
+        "task_id": {"$ref": "#/$defs/identifier"},
+        "category_scores": {"$ref": "#/$defs/category_scores"},
+        "penalties": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/penalty"}},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "safety_status": {"enum": ["passed", "failed"]},
+        "derivation": {"$ref": "#/$defs/public_text"}
+      }
+    },
+    "source_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "stop_condition_status", "safety_status", "scorecard", "regressions", "limitations"],
+      "properties": {
+        "status": {"enum": ["completed", "failed", "blocked"]},
+        "stop_condition_status": {"enum": ["satisfied", "failed", "blocked"]},
+        "safety_status": {"enum": ["passed", "failed"]},
+        "scorecard": {"$ref": "#/$defs/scorecard"},
+        "regressions": {"$ref": "#/$defs/annotations"},
+        "limitations": {"$ref": "#/$defs/annotations"}
+      },
+      "oneOf": [
+        {
+          "required": ["status", "stop_condition_status", "safety_status"],
+          "properties": {
+            "status": {"const": "completed"},
+            "stop_condition_status": {"const": "satisfied"},
+            "safety_status": {"const": "passed"}
+          }
+        },
+        {
+          "required": ["status", "stop_condition_status", "safety_status"],
+          "properties": {
+            "status": {"const": "failed"},
+            "stop_condition_status": {"const": "failed"},
+            "safety_status": {"enum": ["passed", "failed"]}
+          }
+        },
+        {
+          "required": ["status", "stop_condition_status", "safety_status"],
+          "properties": {
+            "status": {"const": "blocked"},
+            "stop_condition_status": {"const": "blocked"},
+            "safety_status": {"const": "passed"}
+          }
+        }
+      ]
+    }
+  }
+}
