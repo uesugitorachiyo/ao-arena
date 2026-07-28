@@ -18,6 +18,7 @@ rendered from JSON and must never become the source of truth.
 | Real-attempt task portfolio | `docs/contracts/arena-real-attempt-task-portfolio-v0.1.schema.json` | `examples/real-attempts/valid/month5-task-portfolio.json` | Runtime negative tests |
 | Real-attempt outcome evidence | `docs/contracts/arena-real-attempt-evidence-v0.1.schema.json` | `examples/real-attempts/valid/evidence/*.json` | Runtime negative tests |
 | Real-attempt comparison | `docs/contracts/arena-real-attempt-comparison-v0.1.schema.json` | Generated from the valid manifest | Runtime negative tests |
+| Autonomous-repair governance evaluation | `docs/contracts/arena-autonomous-repair-governance-evaluation-v1.schema.json` | `examples/reports/valid/autonomous-repair-governance-evaluation.json` | Runtime negative tests |
 | Promotion gate | `docs/contracts/arena-promotion-gate-v0.1.schema.json` | `examples/gates/valid/promotion-pass.json` | `examples/gates/invalid/unsafe-promotion.json` |
 
 ## Required Shapes
