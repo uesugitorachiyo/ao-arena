@@ -12,6 +12,7 @@ Arena evaluates supplied files; it does not launch providers, execute AO work, m
 - [docs/sdd/AO-ARENA-SCORING.md](docs/sdd/AO-ARENA-SCORING.md) is authoritative for scoring, penalties, eligibility, and tie handling.
 - [docs/sdd/AO-ARENA-CONTRACTS.md](docs/sdd/AO-ARENA-CONTRACTS.md) and [docs/sdd/AO-ARENA-BENCHMARK-SUITE.md](docs/sdd/AO-ARENA-BENCHMARK-SUITE.md) own contract and portfolio semantics.
 - `docs/contracts/`, `internal/arena/`, `internal/cli/`, and their tests own implemented validation and scoring. [`.github/workflows/ci.yml`](.github/workflows/ci.yml) defines the broad gate.
+- [ao-quality-gates.json](ao-quality-gates.json) declares the source-owned commit, push, and full quality commands consumed by the stack-wide quality runner.
 
 ## Ownership And Boundaries
 
