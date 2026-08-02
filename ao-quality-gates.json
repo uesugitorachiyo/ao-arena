@@ -1,0 +1,42 @@
+{
+  "schema_version": "ao.quality-gates.v1",
+  "repository": "ao-arena",
+  "lifecycle": "active_hosted",
+  "supported_platforms": ["linux", "macos", "windows"],
+  "required_tools": ["git", "go"],
+  "generated_paths": ["bin/**", "dist/**", "target/**", "tmp/**"],
+  "protected_paths": [".git/**", "docs/evidence/**"],
+  "compatibility": {"minimum_consumer_version": "1.0.0", "owner": "ao-arena"},
+  "evidence": {"public_safe": true, "local_artifact_root": "tmp/quality-gates", "maximum_result_bytes": 262144},
+  "levels": {
+    "commit": {
+      "snapshot": "staged_tree",
+      "maximum_duration_seconds": 10,
+      "network_allowed": false,
+      "mutates_source": false,
+      "steps": [
+        {"id": "staged-diff-check", "argv": ["git", "diff", "--cached", "--check"], "timeout_seconds": 10, "path_triggers": ["**"]}
+      ]
+    },
+    "push": {
+      "snapshot": "outgoing_commits",
+      "maximum_duration_seconds": 120,
+      "network_allowed": false,
+      "mutates_source": false,
+      "steps": [
+        {"id": "arena-package-tests", "argv": ["go", "test", "./internal/arena", "./internal/cli", "-count=1"], "timeout_seconds": 110, "path_triggers": ["**"]}
+      ]
+    },
+    "full": {
+      "snapshot": "source_head",
+      "maximum_duration_seconds": 900,
+      "network_allowed": false,
+      "mutates_source": false,
+      "steps": [
+        {"id": "go-tests", "argv": ["go", "test", "./...", "-count=1"], "timeout_seconds": 600, "path_triggers": ["**"]},
+        {"id": "go-vet", "argv": ["go", "vet", "./..."], "timeout_seconds": 180, "path_triggers": ["**"]},
+        {"id": "go-build", "argv": ["go", "build", "-o", "tmp/quality-gates/arena", "./cmd/arena"], "timeout_seconds": 120, "path_triggers": ["**"]}
+      ]
+    }
+  }
+}
