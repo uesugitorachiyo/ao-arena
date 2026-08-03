@@ -30,6 +30,7 @@ func TestNativeArtifactWorkflowContract(t *testing.T) {
 		"./cmd/arena",
 		"--help",
 		"contents: read",
+		"4c501b4f1e55cb9b926709e19d496edf41984fb1",
 	} {
 		if !strings.Contains(workflow, want) {
 			t.Fatalf("native artifact workflow missing %q", want)
@@ -44,5 +45,24 @@ func TestNativeArtifactWorkflowContract(t *testing.T) {
 		if strings.Contains(workflow, forbidden) {
 			t.Fatalf("tier 3 artifact workflow must not include %q", forbidden)
 		}
+	}
+
+	nativeBuild := strings.Index(workflow, "name: Build native artifact from clean source")
+	policyCheckout := strings.Index(workflow, "name: Checkout pinned supply-chain policy")
+	if nativeBuild < 0 || policyCheckout < 0 || nativeBuild >= policyCheckout {
+		t.Fatal("native artifact must be built before the policy checkout modifies the source tree")
+	}
+	if !strings.Contains(workflow, `--workspace-root "$supply_chain_dir"`) {
+		t.Fatal("downloadable supply-chain evidence must verify relative to its bundle")
+	}
+	builder := strings.Index(workflow, "scripts/build_go_supply_chain_candidate.py")
+	verifier := strings.Index(workflow, "scripts/verify_supply_chain_policy.py")
+	if builder < 0 || verifier < 0 || builder >= verifier {
+		t.Fatal("supply-chain builder and verifier steps are required in order")
+	}
+	repositoryRoot := strings.Index(workflow[builder:verifier], "--workspace-root .")
+	bundleRoot := strings.Index(workflow[verifier:], `--workspace-root "$supply_chain_dir"`)
+	if repositoryRoot < 0 || bundleRoot < 0 {
+		t.Fatal("builder must use the repository root and verifier must use the bundle root")
 	}
 }
