@@ -55,4 +55,14 @@ func TestNativeArtifactWorkflowContract(t *testing.T) {
 	if !strings.Contains(workflow, `--workspace-root "$supply_chain_dir"`) {
 		t.Fatal("downloadable supply-chain evidence must verify relative to its bundle")
 	}
+	builder := strings.Index(workflow, "scripts/build_go_supply_chain_candidate.py")
+	verifier := strings.Index(workflow, "scripts/verify_supply_chain_policy.py")
+	if builder < 0 || verifier < 0 || builder >= verifier {
+		t.Fatal("supply-chain builder and verifier steps are required in order")
+	}
+	repositoryRoot := strings.Index(workflow[builder:verifier], "--workspace-root .")
+	bundleRoot := strings.Index(workflow[verifier:], `--workspace-root "$supply_chain_dir"`)
+	if repositoryRoot < 0 || bundleRoot < 0 {
+		t.Fatal("builder must use the repository root and verifier must use the bundle root")
+	}
 }

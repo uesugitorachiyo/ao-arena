@@ -87,7 +87,7 @@ jobs:
           supply_chain_dir="$artifact_dir/supply-chain"
           archive="ao-arena-${version}-${TARGET_LABEL}.tar.gz"
           python3 .ao-supply-chain-policy/scripts/build_go_supply_chain_candidate.py \
-            --workspace-root "$supply_chain_dir" \
+            --workspace-root . \
             --repository ao-arena \
             --source-sha "$source_sha" \
             --version "$version" \
@@ -104,7 +104,7 @@ jobs:
             --inventory .ao-supply-chain-policy/stack/distributable-inventory.json \
             --policy .ao-supply-chain-policy/stack/sbom-policy.json \
             --evidence "$supply_chain_dir/supply-chain-evidence.json" \
-            --workspace-root . \
+            --workspace-root "$supply_chain_dir" \
             --expected-source-sha "$source_sha" \
             --expected-version "$version" \
             --expected-target "$TARGET_LABEL" \
