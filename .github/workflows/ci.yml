@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: uesugitorachiyo/ao-architecture
-          ref: f28e994568c17d634886cd59d986a8ee42b509d2
+          ref: 950b54e81d6a9a8cccbbd71b8c5210f053b3c47f
           path: .ao-supply-chain-policy
 
       - name: Test
