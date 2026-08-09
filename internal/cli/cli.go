@@ -57,6 +57,7 @@ Commands:
   score --attempt <path> --scorecard <path> --out <path>
   compare --suite <path> --fixture-mode --out <path>
   compare real-attempts --input <manifest.json> --out <comparison.json>
+  compare ao-lore --input <manifest.json> --out <comparison.json>
   report render --report <json> --out <markdown>
   gate promotion --report <json> --out <json>
   safety scan --path <path> --out <json>`)
@@ -144,6 +145,9 @@ func runCompare(args []string, stdout io.Writer) error {
 	if len(args) > 0 && args[0] == "real-attempts" {
 		return runCompareRealAttempts(args[1:], stdout)
 	}
+	if len(args) > 0 && args[0] == "ao-lore" {
+		return runCompareAOLore(args[1:], stdout)
+	}
 	suite := flagValue(args, "--suite")
 	out := flagValue(args, "--out")
 	if suite == "" || out == "" {
@@ -157,6 +161,22 @@ func runCompare(args []string, stdout io.Writer) error {
 		return err
 	}
 	fmt.Fprintf(stdout, "comparison report written: %s winner=%s\n", filepath.Clean(out), report.Winner)
+	return nil
+}
+
+func runCompareAOLore(args []string, stdout io.Writer) error {
+	input, out, err := realAttemptComparePaths(args)
+	if err != nil {
+		if strings.HasPrefix(err.Error(), "usage:") {
+			return fmt.Errorf("usage: arena compare ao-lore --input <manifest.json> --out <comparison.json>")
+		}
+		return err
+	}
+	report, err := arena.CompareAOLore(input, out)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(stdout, "AO Lore comparison written: pairs=%d winner=%s result=%s\n", len(report.Pairs), report.Winner, report.Result)
 	return nil
 }
 
