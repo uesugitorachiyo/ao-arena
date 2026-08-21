@@ -204,9 +204,7 @@ func TestAutonomousRepairGovernanceEvaluationRejectsMalformedOversizedAndSymlink
 
 	fixture := filepath.Join(repoRoot(t), autonomousRepairGovernanceEvaluationFixture)
 	symlinkPath := filepath.Join(root, "evaluation.json")
-	if err := os.Symlink(fixture, symlinkPath); err != nil {
-		t.Fatal(err)
-	}
+	requireTestSymlink(t, fixture, symlinkPath)
 	if _, err := LoadAndValidateAutonomousRepairGovernanceEvaluation(symlinkPath); err == nil {
 		t.Fatal("accepted symlinked evaluation")
 	}
