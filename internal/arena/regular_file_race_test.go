@@ -67,7 +67,8 @@ func TestRootedStrictJSONReaderRejectsAncestorSymlinkSwap(t *testing.T) {
 		if err := os.Rename(evidenceDir, filepath.Join(base, "evidence-original")); err != nil {
 			return err
 		}
-		return os.Symlink(attacker, evidenceDir)
+		requireTestSymlink(t, attacker, evidenceDir)
+		return nil
 	})
 	if err == nil {
 		t.Fatalf("ancestor swap accepted attacker sidecar: %#v", target)
