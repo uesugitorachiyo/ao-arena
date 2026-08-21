@@ -2,13 +2,25 @@ package arena
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 	"testing"
 )
+
+func requireTestSymlink(t *testing.T, oldname, newname string) {
+	t.Helper()
+	if err := os.Symlink(oldname, newname); err != nil {
+		if runtime.GOOS == "windows" && errors.Is(err, syscall.Errno(1314)) {
+			t.Skipf("symlink unavailable without Create Symbolic Link privilege: %v", err)
+		}
+		t.Fatalf("symlink %s %s: %v", oldname, newname, err)
+	}
+}
 
 func TestScoreWorkedExamples(t *testing.T) {
 	root := repoRoot(t)
@@ -64,17 +76,12 @@ func TestSafetyScanRedactsSecretsAndForbiddenActions(t *testing.T) {
 }
 
 func TestSafetyScanRejectsSymlinkedSafeSuffixFile(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("symlink creation is privilege-dependent on Windows")
-	}
 	dir := t.TempDir()
 	outsidePath := filepath.Join(t.TempDir(), "outside.json")
 	if err := os.WriteFile(outsidePath, []byte(`{"safe":true}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(outsidePath, filepath.Join(dir, "linked.json")); err != nil {
-		t.Fatalf("create symlink: %v", err)
-	}
+	requireTestSymlink(t, outsidePath, filepath.Join(dir, "linked.json"))
 
 	_, err := ScanPath(dir)
 

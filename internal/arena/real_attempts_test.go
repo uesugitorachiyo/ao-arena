@@ -610,9 +610,7 @@ func TestCompareRealAttemptsVerifiesBoundedIdentityBoundEvidence(t *testing.T) {
 			if err := os.Remove(evidencePath); err != nil {
 				t.Fatal(err)
 			}
-			if err := os.Symlink(target, evidencePath); err != nil {
-				t.Fatal(err)
-			}
+			requireTestSymlink(t, target, evidencePath)
 
 			_, err = CompareRealAttempts(input, filepath.Join(t.TempDir(), "comparison.json"))
 			if err == nil || !strings.Contains(err.Error(), "regular non-link") {
@@ -758,9 +756,7 @@ func TestCompareRealAttemptsRejectsNonStrictOrUnboundedInput(t *testing.T) {
 		t.Run("symlink input", func(t *testing.T) {
 			realInput := writeRealAttemptManifest(t, manifest)
 			linkedInput := filepath.Join(t.TempDir(), "manifest.json")
-			if err := os.Symlink(realInput, linkedInput); err != nil {
-				t.Fatal(err)
-			}
+			requireTestSymlink(t, realInput, linkedInput)
 			_, err := CompareRealAttempts(linkedInput, filepath.Join(t.TempDir(), "comparison.json"))
 			if err == nil || !strings.Contains(err.Error(), "regular non-link") {
 				t.Fatalf("CompareRealAttempts symlink error = %v", err)
@@ -862,9 +858,7 @@ func TestCompareRealAttemptsValidatesBeforeOpeningExclusiveOutput(t *testing.T) 
 				t.Fatal(err)
 			}
 			out := filepath.Join(dir, "comparison.json")
-			if err := os.Symlink(target, out); err != nil {
-				t.Fatal(err)
-			}
+			requireTestSymlink(t, target, out)
 			_, err := CompareRealAttempts(validInput, out)
 			if err == nil || !strings.Contains(err.Error(), "output symlink") {
 				t.Fatalf("CompareRealAttempts output-symlink error = %v", err)
@@ -874,9 +868,7 @@ func TestCompareRealAttemptsValidatesBeforeOpeningExclusiveOutput(t *testing.T) 
 		t.Run("symlinked output ancestor", func(t *testing.T) {
 			realParent := t.TempDir()
 			linkedParent := filepath.Join(t.TempDir(), "linked-parent")
-			if err := os.Symlink(realParent, linkedParent); err != nil {
-				t.Fatal(err)
-			}
+			requireTestSymlink(t, realParent, linkedParent)
 			_, err := CompareRealAttempts(validInput, filepath.Join(linkedParent, "comparison.json"))
 			if err == nil || !strings.Contains(err.Error(), "output parent or ancestor is a symlink") {
 				t.Fatalf("symlinked output ancestor error = %v", err)
@@ -957,9 +949,7 @@ func TestPreparedRealAttemptOutputBindsValidatedDirectory(t *testing.T) {
 	if err := os.Mkdir(attackerParent, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(attackerParent, parent); err != nil {
-		t.Fatal(err)
-	}
+	requireTestSymlink(t, attackerParent, parent)
 
 	if err := target.Write([]byte("bound\n"), writeAll); err != nil {
 		t.Fatal(err)
