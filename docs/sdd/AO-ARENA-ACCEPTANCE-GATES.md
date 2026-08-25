@@ -14,8 +14,9 @@ The SDD pack is ready for implementation only when:
 - safety defines forbidden actions, secret patterns, path scans, live opt-in,
   and fail-closed behavior;
 - implementation slices define future files, tests, commands, and acceptance;
-- handoff prompt can drive AO Foundry or AO Forge without additional
-  clarification.
+- the maintained public SDD pack and README command path drive fixture-only
+  validation, deterministic scoring, report rendering, and promotion-gate
+  evaluation without private prompt context.
 
 ## Product 100/100 Gate
 
