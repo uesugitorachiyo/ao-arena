@@ -16,6 +16,10 @@ and the
 [AO Arena component page](https://github.com/uesugitorachiyo/ao-architecture/blob/main/components/ao-arena.md)
 for the cross-repository flow.
 
+## Build and run from source
+
+Requires Go 1.24 or later.
+
 ## Run
 
 ```sh
@@ -57,7 +61,7 @@ file, with no timestamp, evidence path, or local absolute path in the report.
 | File | Purpose |
 | --- | --- |
 | `docs/sdd/AO-ARENA-PRD.md` | Product requirements, users, scope, non-goals, success metrics. |
-| `docs/sdd/AO-ARENA-ARCHITECTURE.md` | Future CLI, packages, data flow, storage layout, integrations. |
+| `docs/sdd/AO-ARENA-ARCHITECTURE.md` | CLI, packages, data flow, storage layout, integrations. |
 | `docs/sdd/AO-ARENA-CONTRACTS.md` | JSON contracts, fixture names, validation rules. |
 | `docs/sdd/AO-ARENA-SCORING.md` | Exact scoring formula, penalties, tie rules, examples. |
 | `docs/sdd/AO-ARENA-BENCHMARK-SUITE.md` | First eight benchmark tasks and comparison prompts. |
