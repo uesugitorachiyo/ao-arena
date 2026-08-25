@@ -64,7 +64,6 @@ file, with no timestamp, evidence path, or local absolute path in the report.
 | `docs/sdd/AO-ARENA-SAFETY.md` | Public-safety, forbidden actions, live-run opt-in, fail-closed rules. |
 | `docs/sdd/AO-ARENA-IMPLEMENTATION-SLICES.md` | Junior-engineer-ready implementation slices. |
 | `docs/sdd/AO-ARENA-ACCEPTANCE-GATES.md` | 100/100 plan and product readiness gates. |
-| `docs/sdd/AO-ARENA-SDD-HANDOFF.md` | Handoff prompt for AO Foundry or AO Forge. |
 
 ## License
 
